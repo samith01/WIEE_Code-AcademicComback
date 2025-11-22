@@ -40,12 +40,13 @@ export default function Assignment({ courseName, onBack }) {
 
   const [assignments] = useState(getAssignmentsForCourse(courseName));
   const [newAssignment, setNewAssignment] = useState("");
+  const [newDueDate, setNewDueDate] = useState("");
   const [assignmentsList, setAssignmentsList] = useState(assignments);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
 
   const addAssignment = () => {
-    if (newAssignment.trim()) {
+    if (newAssignment.trim() && uploadedFile) {
       const newTask = {
         id: Date.now(),
         title: newAssignment.trim(),
@@ -149,7 +150,12 @@ export default function Assignment({ courseName, onBack }) {
             
             <button
               onClick={addAssignment}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+              disabled={!uploadedFile || !newAssignment.trim()}
+              className={`px-6 py-2 rounded-lg transition-colors duration-200 font-medium ${
+                uploadedFile && newAssignment.trim() 
+                  ? 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer' 
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
             >
               Create Plan
             </button>
@@ -171,7 +177,7 @@ export default function Assignment({ courseName, onBack }) {
               Drag and drop your PDF file here
             </p>
             <p className="text-sm text-gray-500">
-              Files can be uploaded via drag & drop or individual upload buttons
+              PDF upload required to create a plan
             </p>
             
             {/* Show uploaded file for new assignment */}
@@ -255,23 +261,6 @@ export default function Assignment({ courseName, onBack }) {
                     <p className="text-sm text-gray-500">Due: {assignment.dueDate}</p>
                   </div>
                   <div className="ml-4 flex gap-2">
-                    {/* Upload Button for each assignment */}
-                    <div className="relative">
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => handleFileUpload(assignment.id, e)}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        id={`file-upload-${assignment.id}`}
-                      />
-                      <label
-                        htmlFor={`file-upload-${assignment.id}`}
-                        className="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium cursor-pointer hover:bg-blue-200 transition-colors duration-200"
-                      >
-                        📎 Upload
-                      </label>
-                    </div>
-                    
                     <button
                       onClick={() => toggleStatus(assignment.id)}
                       className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 text-sm font-medium"
