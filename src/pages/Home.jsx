@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Assignment from "./Assignment";
 
 export default function App() {
   const [courses, setCourses] = useState([
@@ -10,6 +11,7 @@ export default function App() {
     "Machine Learning"
   ]);
   const [newCourse, setNewCourse] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
   const addCourse = () => {
     if (newCourse.trim()) {
@@ -17,6 +19,19 @@ export default function App() {
       setNewCourse("");
     }
   };
+
+  const handleCourseClick = (course) => {
+    setSelectedCourse(course);
+  };
+
+  const handleBackToCourses = () => {
+    setSelectedCourse(null);
+  };
+
+  // If a course is selected, show the Assignment page
+  if (selectedCourse) {
+    return <Assignment courseName={selectedCourse} onBack={handleBackToCourses} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -47,11 +62,15 @@ export default function App() {
           {courses.map((course, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+              onClick={() => handleCourseClick(course)}
+              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer transform hover:scale-105"
             >
               <h3 className="text-lg font-semibold text-gray-800 text-center">
                 {course}
               </h3>
+              <p className="text-sm text-gray-500 text-center mt-2">
+                Click to view assignments
+              </p>
             </div>
           ))}
         </div>
