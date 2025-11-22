@@ -175,32 +175,44 @@ export default function Assignment({ courseName, onBack }) {
           </div>
           
           {/* Drag and Drop Area */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
-              dragOver 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
-            }`}
-          >
-            <div className="text-4xl mb-3">📁</div>
-            <p className="text-gray-600 font-medium mb-1">
-              Drag and drop your PDF file here
-            </p>
-            <p className="text-sm text-gray-500">
-              Assignment name, due date, and PDF upload required to create a plan
-            </p>
-            
-            {/* Show uploaded file for new assignment */}
-            {uploadedFile && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-sm text-green-700 font-medium">
-                  📄 File ready: {uploadedFile}
-                </p>
-              </div>
-            )}
+          <div className="relative">
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={handleNewFileUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              id="drag-drop-file-upload"
+            />
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 cursor-pointer ${
+                dragOver 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+              }`}
+            >
+              <div className="text-4xl mb-3">📁</div>
+              <p className="text-gray-600 font-medium mb-1">
+                Drag and drop your PDF file here
+              </p>
+              <p className="text-sm text-blue-500 font-medium mb-2">
+                or click to browse files
+              </p>
+              <p className="text-sm text-gray-500">
+                Assignment name, due date, and PDF upload required to create a plan
+              </p>
+              
+              {/* Show uploaded file for new assignment */}
+              {uploadedFile && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm text-green-700 font-medium">
+                    📄 File ready: {uploadedFile}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
