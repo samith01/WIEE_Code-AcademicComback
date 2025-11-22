@@ -46,17 +46,22 @@ export default function Assignment({ courseName, onBack }) {
   const [dragOver, setDragOver] = useState(false);
 
   const addAssignment = () => {
-    if (newAssignment.trim() && uploadedFile) {
+    if (newAssignment.trim() && uploadedFile && newDueDate) {
       const newTask = {
         id: Date.now(),
         title: newAssignment.trim(),
-        dueDate: "TBD",
+        dueDate: new Date(newDueDate).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        }),
         status: "pending",
         description: "Custom assignment",
         uploadedFile: uploadedFile
       };
       setAssignmentsList([...assignmentsList, newTask]);
       setNewAssignment("");
+      setNewDueDate("");
       setUploadedFile(null);
     }
   };
@@ -148,11 +153,19 @@ export default function Assignment({ courseName, onBack }) {
               onKeyPress={(e) => e.key === 'Enter' && addAssignment()}
             />
             
+            <input
+              type="date"
+              value={newDueDate}
+              onChange={(e) => setNewDueDate(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min={new Date().toISOString().split('T')[0]}
+            />
+            
             <button
               onClick={addAssignment}
-              disabled={!uploadedFile || !newAssignment.trim()}
+              disabled={!uploadedFile || !newAssignment.trim() || !newDueDate}
               className={`px-6 py-2 rounded-lg transition-colors duration-200 font-medium ${
-                uploadedFile && newAssignment.trim() 
+                uploadedFile && newAssignment.trim() && newDueDate
                   ? 'bg-blue-500 text-white hover:bg-blue-600 cursor-pointer' 
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
@@ -177,7 +190,7 @@ export default function Assignment({ courseName, onBack }) {
               Drag and drop your PDF file here
             </p>
             <p className="text-sm text-gray-500">
-              PDF upload required to create a plan
+              Assignment name, due date, and PDF upload required to create a plan
             </p>
             
             {/* Show uploaded file for new assignment */}
